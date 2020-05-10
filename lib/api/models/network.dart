@@ -7,7 +7,7 @@ class Network {
 
   Network({this.id, this.deviceId, this.lat, this.lon, this.mac});
 
-  factory Network.fromJson(Map<String, dynamic> json) {
+  factory Network.fromJson(dynamic json) {
     return Network(
       id: json['_id'],
       deviceId: json['device_id'],
