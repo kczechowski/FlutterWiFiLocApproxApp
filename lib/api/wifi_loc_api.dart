@@ -5,6 +5,7 @@ import 'package:kczwifilocation/api/exceptions/api_exception.dart';
 import 'package:kczwifilocation/api/exceptions/bad_request_api_exception.dart';
 import 'package:kczwifilocation/api/exceptions/internal_server_error_api_exception.dart';
 import 'package:kczwifilocation/api/models/network.dart';
+import 'package:kczwifilocation/api/models/network_filter.dart';
 
 class WifiLocAPI {
   final _baseUrl = 'http://10.0.2.2:8080';
@@ -22,10 +23,13 @@ class WifiLocAPI {
       throw new APIException(message, response.statusCode);
   }
 
-  Future<List<Network>> getNetworks() async {
+  Future<List<Network>> getNetworks({NetworkFilter networkFilter}) async {
     List<Network> networkCollection = List();
 
-    final response = await http.get(this._baseUrl + '/networks/');
+    var url = this._baseUrl + '/networks/';
+    if(networkFilter != null) url += '?filter=$networkFilter';
+
+    final response = await http.get(url);
 
     if (response.statusCode != 200) _handleExceptions(response);
 
