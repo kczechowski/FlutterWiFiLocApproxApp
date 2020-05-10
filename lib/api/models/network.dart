@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Network {
   final String id;
   final String deviceId;
@@ -9,12 +11,28 @@ class Network {
 
   factory Network.fromJson(dynamic json) {
     return Network(
-      id: json['_id'],
-      deviceId: json['device_id'],
-      lat: json['lat'],
-      lon: json['lon'],
-      mac: json['mac']
+        id: json['_id'],
+        deviceId: json['device_id'],
+        lat: json['lat'],
+        lon: json['lon'],
+        mac: json['mac']
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': this.id,
+      'device_id': this.deviceId,
+      'lat': this.lat,
+      'lon': this.lon,
+      'mac': this.mac,
+    };
+  }
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+
 
 }
