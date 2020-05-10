@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class Network {
-  final String id;
-  final String deviceId;
-  final double lat;
-  final double lon;
-  final String mac;
+  String id;
+  String deviceId;
+  double lat;
+  double lon;
+  String mac;
 
   Network({this.id, this.deviceId, this.lat, this.lon, this.mac});
 
