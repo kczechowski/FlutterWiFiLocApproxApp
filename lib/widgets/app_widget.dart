@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kczwifilocation/api/wifi_loc_api.dart';
-import 'package:http/http.dart' as http;
+import 'package:kczwifilocation/services/wifi_loc_service.dart';
 
 class AppWidget extends StatefulWidget {
   AppWidget({Key key, this.title}) : super(key: key);
@@ -22,14 +22,14 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  WifiLocAPI _wifiLocAPI;
+  WifiLocService _wifiLocService;
 
   @override
   void initState() {
     super.initState();
-    _wifiLocAPI = WifiLocAPI(httpClient: http.Client());
-    _wifiLocAPI.getNetworks().then((networks) {
-      print(networks);
+    _wifiLocService = WifiLocService();
+    _wifiLocService.getAllNetworks().then((value) {
+      print(value);
     });
   }
 
