@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:kczwifilocation/api/exceptions/api_exception.dart';
+import 'package:kczwifilocation/api/exceptions/bad_request_api_exception.dart';
+import 'package:kczwifilocation/api/exceptions/internal_server_error_api_exception.dart';
 import 'package:kczwifilocation/api/models/network.dart';
 
 class WifiLocAPI {
@@ -9,19 +12,27 @@ class WifiLocAPI {
 
   WifiLocAPI({this.httpClient});
 
+  _handleExceptions(http.Response response) {
+    String message = response.body;
+    if (response.statusCode == 400)
+      throw new BadRequestAPIException(message);
+    else if (response.statusCode == 500)
+      throw new InternalServerErrorAPIException(message);
+    else
+      throw new APIException(message, response.statusCode);
+  }
+
   Future<List<Network>> getNetworks() async {
     List<Network> networkCollection = List();
 
     final response = await http.get(this._baseUrl + '/networks/');
 
-    if (response.statusCode == 200) {
-      List<dynamic> networks = json.decode(response.body);
-      networks.forEach((element) {
-        networkCollection.add(Network.fromJson(element));
-      });
-    } else {
-      throw Exception('Api error');
-    }
+    if (response.statusCode != 200) _handleExceptions(response);
+
+    List<dynamic> networks = json.decode(response.body);
+    networks.forEach((element) {
+      networkCollection.add(Network.fromJson(element));
+    });
 
     return networkCollection;
   }
