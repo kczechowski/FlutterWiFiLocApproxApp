@@ -41,9 +41,8 @@ class _AppWidgetState extends State<AppWidget> with SingleTickerProviderStateMix
           title: Text(widget.title),
         ),
         body: TabBarView(
-          // Add tabs as widgets
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[MapTab(), SettingsTab()],
-          // set the controller
           controller: tabController,
         ),
         bottomNavigationBar: Material(
