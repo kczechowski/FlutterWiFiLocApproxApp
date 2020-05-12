@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:kczwifilocation/services/wifi_loc_service.dart';
 import 'package:latlong/latlong.dart';
 
 class MapTab extends StatefulWidget {
@@ -10,9 +11,15 @@ class MapTab extends StatefulWidget {
 
 class _MapTabState extends State<MapTab> {
 
+  WifiLocService _wifiLocService;
+
   @override
   void initState() {
     super.initState();
+    _wifiLocService = WifiLocService.fromDefaults();
+    _wifiLocService.getAllNetworks().then((value) {
+      print(value);
+    });
   }
 
   @override

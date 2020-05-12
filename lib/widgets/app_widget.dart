@@ -14,16 +14,12 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> with SingleTickerProviderStateMixin {
-  WifiLocService _wifiLocService;
+
   TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    _wifiLocService = WifiLocService.fromDefaults();
-    _wifiLocService.getAllNetworks().then((value) {
-      print(value);
-    });
     tabController = TabController(length: 2, vsync: this);
   }
 
