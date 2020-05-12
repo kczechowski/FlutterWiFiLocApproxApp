@@ -19,9 +19,13 @@ class WifiLocService {
     return wifiLocAPI.getNetworks();
   }
 
-  Future<List<Network>> findNetworkByMac(String mac) {
+  Future<Network> findNetworkByMac(String mac) async  {
     NetworkFilter networkFilter = NetworkFilter(mac: mac);
-    return wifiLocAPI.getNetworks(networkFilter: networkFilter);
+    var result = await wifiLocAPI.getNetworks(networkFilter: networkFilter);
+    if(result.length > 0)
+      return result.elementAt(0);
+    else
+      return null;
   }
 
 }
