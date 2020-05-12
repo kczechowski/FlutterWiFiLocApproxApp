@@ -8,7 +8,9 @@ import 'package:kczwifilocation/api/models/network.dart';
 import 'package:kczwifilocation/api/models/network_filter.dart';
 
 class WifiLocAPI {
+//  final _baseUrl = 'http://192.168.0.67:8080';
   final _baseUrl = 'http://10.0.2.2:8080';
+
   final http.Client httpClient;
 
   WifiLocAPI({this.httpClient});
