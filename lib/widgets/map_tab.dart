@@ -12,10 +12,19 @@ class MapTab extends StatefulWidget {
 class _MapTabState extends State<MapTab> {
 
   WifiLocService _wifiLocService;
+  List<Marker> markers = List();
 
   @override
   void initState() {
     super.initState();
+    markers.add(new Marker(
+      width: 80.0,
+      height: 80.0,
+      point: new LatLng(51.5, -0.09),
+      builder: (ctx) => new Container(
+        child: new FlutterLogo(),
+      ),
+    ));
     _wifiLocService = WifiLocService.fromDefaults();
     _wifiLocService.getAllNetworks().then((value) {
       print(value);
@@ -36,16 +45,7 @@ class _MapTabState extends State<MapTab> {
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             ),
             new MarkerLayerOptions(
-              markers: [
-                new Marker(
-                  width: 80.0,
-                  height: 80.0,
-                  point: new LatLng(51.5, -0.09),
-                  builder: (ctx) => new Container(
-                    child: new FlutterLogo(),
-                  ),
-                ),
-              ],
+              markers: markers,
             ),
           ],
         ),
