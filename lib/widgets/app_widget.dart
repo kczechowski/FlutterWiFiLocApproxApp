@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kczwifilocation/services/wifi_finder_service.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:kczwifilocation/services/wifi_loc_service.dart';
-import 'package:wifi_hunter/wifi_hunter.dart';
+import 'package:latlong/latlong.dart';
 
 class AppWidget extends StatefulWidget {
   AppWidget({Key key, this.title}) : super(key: key);
@@ -42,11 +42,30 @@ class _AppWidgetState extends State<AppWidget> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: FlutterMap(
+        options: new MapOptions(
+          center: LatLng(51.5, -0.09),
+          zoom: 13.0,
         ),
-      ),
+        layers: [
+          new TileLayerOptions(
+            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          ),
+          new MarkerLayerOptions(
+            markers: [
+              new Marker(
+                width: 80.0,
+                height: 80.0,
+                point: new LatLng(51.5, -0.09),
+                builder: (ctx) =>
+                new Container(
+                  child: new FlutterLogo(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      )
     );
   }
 }
