@@ -2,7 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
-class MapTab extends StatelessWidget {
+class MapTab extends StatefulWidget {
+
+  @override
+  _MapTabState createState() => _MapTabState();
+}
+
+class _MapTabState extends State<MapTab> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
