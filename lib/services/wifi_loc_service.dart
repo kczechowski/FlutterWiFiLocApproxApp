@@ -9,17 +9,13 @@ class WifiLocService {
   WifiLocAPI wifiLocAPI;
   WifiFinderService wifiFinderService;
 
-  WifiLocService({WifiLocAPI api, WifiFinderService wifiFinderService}) {
-    if(api != null)
+  WifiLocService(WifiLocAPI api, WifiFinderService wifiFinderService) {
       this.wifiLocAPI = api;
-    else {
-      this.wifiLocAPI = WifiLocAPI(httpClient: http.Client());
-    }
-    if(wifiFinderService != null)
       this.wifiFinderService = wifiFinderService;
-    else {
-      this.wifiFinderService = WifiFinderService();
-    }
+  }
+
+  factory WifiLocService.fromDefaults() {
+    return WifiLocService(WifiLocAPI(httpClient: http.Client()), WifiFinderService());
   }
 
   Future<List<Network>> getAllNetworks() {
