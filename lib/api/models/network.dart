@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:latlong/latlong.dart';
 
 class Network {
   String id;
@@ -34,5 +35,8 @@ class Network {
     return jsonEncode(this);
   }
 
+  LatLng toLatLng() {
+    return LatLng(this.lat, this.lon);
+  }
 
 }
