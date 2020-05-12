@@ -1,22 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:kczwifilocation/services/wifi_loc_service.dart';
-import 'package:latlong/latlong.dart';
+import 'package:kczwifilocation/widgets/map_tab.dart';
+import 'package:kczwifilocation/widgets/settings_tab.dart';
 
 class AppWidget extends StatefulWidget {
   AppWidget({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -24,8 +13,9 @@ class AppWidget extends StatefulWidget {
   _AppWidgetState createState() => _AppWidgetState();
 }
 
-class _AppWidgetState extends State<AppWidget> {
+class _AppWidgetState extends State<AppWidget> with SingleTickerProviderStateMixin {
   WifiLocService _wifiLocService;
+  TabController tabController;
 
   @override
   void initState() {
@@ -34,38 +24,42 @@ class _AppWidgetState extends State<AppWidget> {
     _wifiLocService.getAllNetworks().then((value) {
       print(value);
     });
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the Tab Controller
+    tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: FlutterMap(
-        options: new MapOptions(
-          center: LatLng(51.5, -0.09),
-          zoom: 13.0,
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-        layers: [
-          new TileLayerOptions(
-            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-          ),
-          new MarkerLayerOptions(
-            markers: [
-              new Marker(
-                width: 80.0,
-                height: 80.0,
-                point: new LatLng(51.5, -0.09),
-                builder: (ctx) =>
-                new Container(
-                  child: new FlutterLogo(),
-                ),
+        body: TabBarView(
+          // Add tabs as widgets
+          children: <Widget>[MapTab(), SettingsTab()],
+          // set the controller
+          controller: tabController,
+        ),
+        bottomNavigationBar: Material(
+          color: Colors.blue,
+          child: TabBar(
+            tabs: <Tab>[
+              Tab(
+                // set icon to the tab
+                icon: Icon(Icons.map),
+              ),
+              Tab(
+                icon: Icon(Icons.settings),
               ),
             ],
+            controller: tabController,
           ),
-        ],
-      )
-    );
+        ));
   }
 }
