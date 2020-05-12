@@ -28,6 +28,18 @@ class _MapTabState extends State<MapTab> {
     _wifiLocService = WifiLocService.fromDefaults();
     _wifiLocService.getAllNetworks().then((value) {
       print(value);
+      value.forEach((network) {
+        var marker = Marker(
+          width: 40,
+          height: 40,
+          point: network.toLatLng(),
+          builder: (ctx) =>
+          new Container(
+            child: FlutterLogo(),
+          ),
+        );
+        markers.add(marker);
+      });
     });
   }
 
