@@ -13,12 +13,14 @@ class MapTab extends StatefulWidget {
 class _MapTabState extends State<MapTab> {
 
   WifiLocService _wifiLocService;
+  MapController mapController;
   List<Marker> markers = List();
 
   @override
   void initState() {
     super.initState();
-    markers.add(NetworkMarker(LatLng(51.5, -0.09)));
+    mapController = MapController();
+
     _wifiLocService = WifiLocService.fromDefaults();
     _wifiLocService.getAllNetworks().then((value) {
       print(value);
@@ -27,6 +29,7 @@ class _MapTabState extends State<MapTab> {
         markers.add(marker);
       });
     });
+
   }
 
   @override
@@ -34,8 +37,9 @@ class _MapTabState extends State<MapTab> {
     return Scaffold(
       body: Container(
         child: FlutterMap(
+          mapController: mapController,
           options: new MapOptions(
-            center: LatLng(51.5, -0.09),
+            center: LatLng(50.259224, 19.022285),
             zoom: 13.0,
           ),
           layers: [
