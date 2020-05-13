@@ -30,6 +30,12 @@ class _MapTabState extends State<MapTab> {
       });
     });
 
+    var listener = WifiFoundListener();
+    listener.onFound((network) {
+      print('Found network: $network');
+    });
+    _wifiLocService.addOnFoundListener(listener);
+
     mapController.onReady.then((value) {
       _wifiLocService.findApproxLocation().then((location) {
         if(location != null) {
