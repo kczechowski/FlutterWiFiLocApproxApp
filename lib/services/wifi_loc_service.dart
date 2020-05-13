@@ -3,6 +3,7 @@ import 'package:kczwifilocation/api/models/network_filter.dart';
 import 'package:kczwifilocation/api/wifi_loc_api.dart';
 import 'package:http/http.dart' as http;
 import 'package:kczwifilocation/services/wifi_finder_service.dart';
+import 'package:kczwifilocation/models/approx_location.dart';
 
 class WifiLocService {
 
@@ -29,6 +30,19 @@ class WifiLocService {
       return result.elementAt(0);
     else
       return null;
+  }
+
+  Future<ApproxLocation> findApproxLocation() async {
+    var networks = await getAllNetworks();
+    if(networks.length > 0) {
+      var network = networks.elementAt(0);
+
+      var approxLocation = ApproxLocation();
+      approxLocation.lon = network.lon;
+      approxLocation.lat = network.lat;
+      approxLocation.radius = 10;
+      return approxLocation;
+    } else return null;
   }
 
 

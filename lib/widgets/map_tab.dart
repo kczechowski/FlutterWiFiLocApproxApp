@@ -30,6 +30,16 @@ class _MapTabState extends State<MapTab> {
       });
     });
 
+    mapController.onReady.then((value) {
+      _wifiLocService.findApproxLocation().then((location) {
+        if(location != null) {
+          mapController.move(location.toLatLng(), 18);
+        } else {
+          //TODO: location not found
+        }
+      });
+    });
+
   }
 
   @override
