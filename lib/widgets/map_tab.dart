@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:kczwifilocation/services/wifi_loc_service.dart';
 import 'package:latlong/latlong.dart';
+import 'package:kczwifilocation/widgets/network_marker.dart';
 
 class MapTab extends StatefulWidget {
 
@@ -17,27 +18,12 @@ class _MapTabState extends State<MapTab> {
   @override
   void initState() {
     super.initState();
-    markers.add(new Marker(
-      width: 80.0,
-      height: 80.0,
-      point: new LatLng(51.5, -0.09),
-      builder: (ctx) => new Container(
-        child: new FlutterLogo(),
-      ),
-    ));
+    markers.add(NetworkMarker(LatLng(51.5, -0.09)));
     _wifiLocService = WifiLocService.fromDefaults();
     _wifiLocService.getAllNetworks().then((value) {
       print(value);
       value.forEach((network) {
-        var marker = Marker(
-          width: 40,
-          height: 40,
-          point: network.toLatLng(),
-          builder: (ctx) =>
-          new Container(
-            child: FlutterLogo(),
-          ),
-        );
+        var marker = NetworkMarker(network.toLatLng());
         markers.add(marker);
       });
     });
