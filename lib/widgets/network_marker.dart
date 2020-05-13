@@ -9,6 +9,6 @@ class NetworkMarker extends Marker {
             height: 80.0,
             point: point,
             builder: (ctx) => new Container(
-                  child: new FlutterLogo(),
+                  child: Icon(Icons.wifi)
                 ));
 }
