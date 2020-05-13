@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kczwifilocation/services/wifi_loc_service.dart';
 import 'package:latlong/latlong.dart';
 import 'package:kczwifilocation/widgets/network_marker.dart';
@@ -33,6 +34,12 @@ class _MapTabState extends State<MapTab> {
     var listener = WifiFoundListener();
     listener.onFound((network) {
       print('Found network: $network');
+      Fluttertoast.showToast(
+          msg: 'Found network: $network',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+      );
     });
     _wifiLocService.addOnFoundListener(listener);
 
