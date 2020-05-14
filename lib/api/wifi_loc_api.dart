@@ -42,4 +42,17 @@ class WifiLocAPI {
 
     return networkCollection;
   }
+
+  Future<Network> postNetwork(Network network) async {
+
+    var url = this._baseUrl + '/networks/';
+
+    final response = await http.post(url, body: jsonEncode(network));
+
+    if (response.statusCode != 200) _handleExceptions(response);
+
+    dynamic returnedNetwork = json.decode(response.body);
+
+    return Network.fromJson(returnedNetwork);
+  }
 }
