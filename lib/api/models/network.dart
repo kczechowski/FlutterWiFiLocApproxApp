@@ -7,8 +7,15 @@ class Network {
   double lat;
   double lon;
   String mac;
+  int signalStrength;
 
-  Network({this.id, this.deviceId, this.lat, this.lon, this.mac});
+  Network(
+      {this.id,
+      this.deviceId,
+      this.lat,
+      this.lon,
+      this.mac,
+      this.signalStrength});
 
   factory Network.fromJson(dynamic json) {
     return Network(
@@ -16,8 +23,8 @@ class Network {
         deviceId: json['device_id'],
         lat: json['lat'],
         lon: json['lon'],
-        mac: json['mac']
-    );
+        mac: json['mac'],
+        signalStrength: json['signal_strength']);
   }
 
   Map<String, dynamic> toJson() {
@@ -27,6 +34,7 @@ class Network {
       'lat': this.lat,
       'lon': this.lon,
       'mac': this.mac,
+      'signal_strength': this.signalStrength,
     };
   }
 
@@ -38,5 +46,4 @@ class Network {
   LatLng toLatLng() {
     return LatLng(this.lat, this.lon);
   }
-
 }
