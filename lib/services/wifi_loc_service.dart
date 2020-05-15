@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:kczwifilocation/models/wifi_network_info.dart';
 import 'package:kczwifilocation/services/wifi_finder_service.dart';
 import 'package:kczwifilocation/models/approx_location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class WifiLocService {
 
@@ -47,6 +48,7 @@ class WifiLocService {
   }
 
   Future<ApproxLocation> findApproxLocation() async {
+
     var networks = await getAllNetworks();
     if(networks.length > 0) {
       var network = networks.elementAt(0);
@@ -57,6 +59,24 @@ class WifiLocService {
       approxLocation.radius = 10;
       return approxLocation;
     } else return null;
+  }
+
+  Future<Null> saveFoundNetworksNearLocation() async {
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    var wifis = await wifiFinderService.getWifiList();
+    List<Network> networks = List();
+    wifis.forEach((element) {
+      Network network = Network();
+      network.lat = position.latitude;
+      network.lon = position.longitude;
+      network.mac = element.bssid;
+      network.signalStrength = element.signalStrength;
+      networks.add(network);
+    });
+
+    networks.forEach((network) {
+      wifiLocAPI.postNetwork(network);
+    });
   }
 
 

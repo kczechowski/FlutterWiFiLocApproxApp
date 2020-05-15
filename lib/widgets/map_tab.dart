@@ -24,7 +24,6 @@ class _MapTabState extends State<MapTab> {
 
     _wifiLocService = WifiLocService.fromDefaults();
     _wifiLocService.getAllNetworks().then((value) {
-      print(value);
       value.forEach((network) {
         var marker = NetworkMarker(network.toLatLng());
         markers.add(marker);
@@ -43,6 +42,7 @@ class _MapTabState extends State<MapTab> {
     });
     _wifiLocService.addOnFoundListener(listener);
 
+    _wifiLocService.saveFoundNetworksNearLocation();
     mapController.onReady.then((value) {
       _wifiLocService.findApproxLocation().then((location) {
         if(location != null) {
