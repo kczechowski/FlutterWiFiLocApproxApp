@@ -49,6 +49,21 @@ class _MapTabState extends State<MapTab> {
       _wifiLocService.findApproxLocation().then((location) {
         if(location != null) {
           mapController.move(location.toLatLng(), 18);
+          print('Found location: $location');
+          Fluttertoast.showToast(
+            msg: 'Found location: $location',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+          );
+          var marker = Marker(width: 100.0,
+              height: 100.0,
+              point: location.toLatLng(),
+              builder: (ctx) =>
+              new Container(
+                  child: Icon(Icons.location_on, color: Colors.red,)
+              ));
+          markers.add(marker);
         } else {
           //TODO: location not found
         }

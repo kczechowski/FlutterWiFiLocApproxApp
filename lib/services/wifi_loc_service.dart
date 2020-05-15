@@ -71,6 +71,7 @@ class WifiLocService {
     List<Network> networks = await Future.wait(wifis.map((e) => _getMostPromisingNetwork(e.bssid)));
 
     possibleNetworks.addAll(networks);
+    print(possibleNetworks);
 
     if(possibleNetworks.length > 0) {
 
