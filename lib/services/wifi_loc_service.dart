@@ -45,27 +45,32 @@ class WifiLocService {
       return null;
   }
 
+  Future<Network> _getMostPromisingNetwork(String mac) async {
+    var networks = await wifiLocAPI.getNetworks(networkFilter: NetworkFilter(mac: mac));
+
+    networks.forEach((element) {
+      if (wifiFoundListenerInterface != null)
+        wifiFoundListenerInterface.initFoundEvent(element);
+    });
+
+    if(networks.length > 0) {
+      //sort -> a network from api with the strongest signal is first
+      networks.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
+      return networks.elementAt(0);
+    }
+
+    return null;
+  }
+
   Future<ApproxLocation> findApproxLocation() async {
 
     var wifis = await wifiFinderService.getWifiList();
 
     List<Network> possibleNetworks = List();
 
-    await Future.forEach(wifis, (element) async {
-      var network = await wifiLocAPI.getNetworks(networkFilter: NetworkFilter(mac: element.bssid));
+    List<Network> networks = await Future.wait(wifis.map((e) => _getMostPromisingNetwork(e.bssid)));
 
-      network.forEach((element) {
-        if (wifiFoundListenerInterface != null)
-          wifiFoundListenerInterface.initFoundEvent(element);
-      });
-
-      if(network.length > 0) {
-        //sort -> a network from api with the strongest signal is first
-        network.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
-        possibleNetworks.add(network.elementAt(0));
-      }
-    });
-
+    possibleNetworks.addAll(networks);
 
     if(possibleNetworks.length > 0) {
 
