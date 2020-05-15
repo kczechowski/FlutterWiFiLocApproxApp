@@ -49,16 +49,34 @@ class WifiLocService {
 
   Future<ApproxLocation> findApproxLocation() async {
 
-    var networks = await getAllNetworks();
-    if(networks.length > 0) {
-      var network = networks.elementAt(0);
+    var wifis = await wifiFinderService.getWifiList();
+
+    List<Network> possibleNetworks = List();
+
+    await Future.forEach(wifis, (element) async {
+      var network = await wifiLocAPI.getNetworks(networkFilter: NetworkFilter(mac: element.bssid));
+      if(network.length > 0) {
+        //sort -> a network from api with the strongest signal is first
+        network.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
+        possibleNetworks.add(network.elementAt(0));
+      }
+    });
+
+
+    if(possibleNetworks.length > 0) {
+
+      //sort -> a network with the strongest signal is first
+      possibleNetworks.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
+
+      Network closestNetwork = possibleNetworks.elementAt(0);
 
       var approxLocation = ApproxLocation();
-      approxLocation.lon = network.lon;
-      approxLocation.lat = network.lat;
+      approxLocation.lon = closestNetwork.lon;
+      approxLocation.lat = closestNetwork.lat;
       approxLocation.radius = 10;
       return approxLocation;
     } else return null;
+
   }
 
   Future<Null> saveFoundNetworksNearLocation() async {
@@ -75,7 +93,7 @@ class WifiLocService {
     });
 
     networks.forEach((network) {
-      wifiLocAPI.postNetwork(network);
+//      wifiLocAPI.postNetwork(network);
     });
   }
 

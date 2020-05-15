@@ -23,12 +23,12 @@ class _MapTabState extends State<MapTab> {
     mapController = MapController();
 
     _wifiLocService = WifiLocService.fromDefaults();
-    _wifiLocService.getAllNetworks().then((value) {
-      value.forEach((network) {
-        var marker = NetworkMarker(network.toLatLng());
-        markers.add(marker);
-      });
-    });
+//    _wifiLocService.getAllNetworks().then((value) {
+////      value.forEach((network) {
+////        var marker = NetworkMarker(network.toLatLng());
+////        markers.add(marker);
+////      });
+////    });
 
     var listener = WifiFoundListener();
     listener.onFound((network) {
