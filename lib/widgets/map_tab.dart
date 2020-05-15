@@ -33,6 +33,8 @@ class _MapTabState extends State<MapTab> {
     var listener = WifiFoundListener();
     listener.onFound((network) {
       print('Found network: $network');
+      var marker = NetworkMarker(network.toLatLng());
+      markers.add(marker);
       Fluttertoast.showToast(
           msg: 'Found network: $network',
           toastLength: Toast.LENGTH_SHORT,

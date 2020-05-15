@@ -39,8 +39,6 @@ class WifiLocService {
     NetworkFilter networkFilter = NetworkFilter(mac: mac);
     var result = await wifiLocAPI.getNetworks(networkFilter: networkFilter);
     if(result.length > 0) {
-      if(wifiFoundListenerInterface != null)
-        wifiFoundListenerInterface.initFoundEvent(result.elementAt(0));
       return result.elementAt(0);
     }
     else
@@ -55,6 +53,12 @@ class WifiLocService {
 
     await Future.forEach(wifis, (element) async {
       var network = await wifiLocAPI.getNetworks(networkFilter: NetworkFilter(mac: element.bssid));
+
+      network.forEach((element) {
+        if (wifiFoundListenerInterface != null)
+          wifiFoundListenerInterface.initFoundEvent(element);
+      });
+
       if(network.length > 0) {
         //sort -> a network from api with the strongest signal is first
         network.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
