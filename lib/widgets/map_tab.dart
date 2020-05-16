@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kczwifilocation/services/wifi_loc_service.dart';
 import 'package:latlong/latlong.dart';
 import 'package:kczwifilocation/widgets/network_marker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MapTab extends StatefulWidget {
 
@@ -23,12 +24,6 @@ class _MapTabState extends State<MapTab> {
     mapController = MapController();
 
     _wifiLocService = WifiLocService.fromDefaults();
-//    _wifiLocService.getAllNetworks().then((value) {
-////      value.forEach((network) {
-////        var marker = NetworkMarker(network.toLatLng());
-////        markers.add(marker);
-////      });
-////    });
 
     var listener = WifiFoundListener();
     listener.onFound((network) {
@@ -44,7 +39,18 @@ class _MapTabState extends State<MapTab> {
     });
     _wifiLocService.addOnFoundListener(listener);
 
-    _wifiLocService.saveFoundNetworksNearLocation();
+    SharedPreferences.getInstance().then((prefs) async {
+      if(!prefs.containsKey('POST_NETWORKS')) {
+        await prefs.setBool('POST_NETWORKS', false);
+      }
+
+      bool postNetworks = prefs.getBool('POST_NETWORKS');
+
+      if(postNetworks) {
+        _wifiLocService.saveFoundNetworksNearLocation();
+      }
+    });
+
     mapController.onReady.then((value) {
       _wifiLocService.findApproxLocation().then((location) {
         if(location != null) {
