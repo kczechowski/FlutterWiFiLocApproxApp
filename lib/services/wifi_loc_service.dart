@@ -103,7 +103,7 @@ class WifiLocService {
     });
 
     networks.forEach((network) {
-//      wifiLocAPI.postNetwork(network);
+      wifiLocAPI.postNetwork(network);
     });
   }
 

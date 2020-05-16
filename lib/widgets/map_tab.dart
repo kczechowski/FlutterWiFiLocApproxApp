@@ -59,8 +59,9 @@ class _MapTabState extends State<MapTab> {
           Fluttertoast.showToast(
             msg: 'Found location: $location',
             toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
+            gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
+            backgroundColor: Colors.blueAccent,
           );
           var marker = Marker(width: 100.0,
               height: 100.0,
@@ -71,7 +72,13 @@ class _MapTabState extends State<MapTab> {
               ));
           markers.add(marker);
         } else {
-          //TODO: location not found
+          Fluttertoast.showToast(
+            msg: 'Location not found',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+          );
         }
       });
     });
