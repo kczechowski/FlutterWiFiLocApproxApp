@@ -68,7 +68,7 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapT
 
   void _findApproxLocation() {
     if(progressDialog != null) {
-      Timer(Duration(milliseconds: 500), () {
+      Timer(Duration(milliseconds: 0), () {
         progressDialog.show();
       });
     }
@@ -81,7 +81,9 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapT
       });
 
       if(location != null) {
-        mapController.move(location.toLatLng(), 18);
+        setState(() {
+          mapController.move(location.toLatLng(), 18);
+        });
         String locationFoundMessage = 'Found location: closest to ' +
             location.relatedNetwork.ssid + '\n' + 'lat ' +
             location.lat.toString() + '\nlon ' + location.lon.toString();
