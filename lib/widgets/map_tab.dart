@@ -31,20 +31,18 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapT
 
     _initWifiFoundListener();
 
-    SharedPreferences.getInstance().then((prefs) async {
-      if(!prefs.containsKey('POST_NETWORKS')) {
-        await prefs.setBool('POST_NETWORKS', false);
-      }
-
-      bool postNetworks = prefs.getBool('POST_NETWORKS');
-
-      if(postNetworks) {
-        _wifiLocService.saveFoundNetworksNearLocation();
-      }
-    });
-
     mapController.onReady.then((value) {
       _findApproxLocation();
+    });
+
+    Timer.periodic(Duration(seconds: 20), (timer) {
+      Fluttertoast.showToast(
+        msg: 'Sending networks to API',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+      );
+      _saveFoundNetworksToAPI();
     });
 
   }
@@ -119,6 +117,20 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapT
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
         );
+      }
+    });
+  }
+
+  void _saveFoundNetworksToAPI() {
+    SharedPreferences.getInstance().then((prefs) async {
+      if(!prefs.containsKey('POST_NETWORKS')) {
+        await prefs.setBool('POST_NETWORKS', false);
+      }
+
+      bool postNetworks = prefs.getBool('POST_NETWORKS');
+
+      if(postNetworks) {
+        _wifiLocService.saveFoundNetworksNearLocation();
       }
     });
   }
