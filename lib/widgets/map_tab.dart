@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kczwifilocation/services/wifi_loc_service.dart';
 import 'package:latlong/latlong.dart';
 import 'package:kczwifilocation/widgets/network_marker.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapTab extends StatefulWidget {
@@ -17,6 +20,7 @@ class _MapTabState extends State<MapTab> {
   WifiLocService _wifiLocService;
   MapController mapController;
   List<Marker> markers = List();
+  ProgressDialog progressDialog;
 
   @override
   void initState() {
@@ -71,10 +75,19 @@ class _MapTabState extends State<MapTab> {
   }
 
   void _findApproxLocation() {
+    if(progressDialog != null) {
+      Timer(Duration(milliseconds: 500), () {
+        progressDialog.show();
+      });
+    }
     setState(() {
       markers.clear();
     });
     _wifiLocService.findApproxLocation().then((location) {
+      Timer(Duration(milliseconds: 0), () {
+        progressDialog.hide();
+      });
+
       if(location != null) {
         mapController.move(location.toLatLng(), 18);
         String locationFoundMessage = 'Found location: closest to ' +
@@ -83,8 +96,8 @@ class _MapTabState extends State<MapTab> {
         print(locationFoundMessage);
         Fluttertoast.showToast(
           msg: locationFoundMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.blueAccent,
         );
@@ -98,7 +111,6 @@ class _MapTabState extends State<MapTab> {
         setState(() {
           markers.add(marker);
         });
-
       } else {
         Fluttertoast.showToast(
           msg: 'Location not found',
@@ -113,6 +125,9 @@ class _MapTabState extends State<MapTab> {
 
   @override
   Widget build(BuildContext context) {
+
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal);
+    progressDialog.style(message: 'Finding location');
     return Scaffold(
       body: Container(
         child: FlutterMap(
