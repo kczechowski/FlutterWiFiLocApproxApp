@@ -52,37 +52,41 @@ class _MapTabState extends State<MapTab> {
     });
 
     mapController.onReady.then((value) {
-      _wifiLocService.findApproxLocation().then((location) {
-        if(location != null) {
-          mapController.move(location.toLatLng(), 18);
-          print('Found location: $location');
-          Fluttertoast.showToast(
-            msg: 'Found location: $location',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.blueAccent,
-          );
-          var marker = Marker(width: 100.0,
-              height: 100.0,
-              point: location.toLatLng(),
-              builder: (ctx) =>
-              new Container(
-                  child: Icon(Icons.location_on, color: Colors.red,)
-              ));
-          markers.add(marker);
-        } else {
-          Fluttertoast.showToast(
-            msg: 'Location not found',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-          );
-        }
-      });
+      _findApproxLocation();
     });
 
+  }
+
+  void _findApproxLocation() {
+    _wifiLocService.findApproxLocation().then((location) {
+      if(location != null) {
+        mapController.move(location.toLatLng(), 18);
+        print('Found location: $location');
+        Fluttertoast.showToast(
+          msg: 'Found location: $location',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.blueAccent,
+        );
+        var marker = Marker(width: 100.0,
+            height: 100.0,
+            point: location.toLatLng(),
+            builder: (ctx) =>
+            new Container(
+                child: Icon(Icons.location_on, color: Colors.red,)
+            ));
+        markers.add(marker);
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Location not found',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+        );
+      }
+    });
   }
 
   @override
@@ -105,6 +109,12 @@ class _MapTabState extends State<MapTab> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _findApproxLocation();
+        },
+        child: Icon(Icons.navigation),
+        backgroundColor: Colors.green,),
     );
   }
 }
