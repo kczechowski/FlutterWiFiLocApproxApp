@@ -15,7 +15,7 @@ class MapTab extends StatefulWidget {
   _MapTabState createState() => _MapTabState();
 }
 
-class _MapTabState extends State<MapTab> {
+class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapTab>{
 
   WifiLocService _wifiLocService;
   MapController mapController;
@@ -154,4 +154,7 @@ class _MapTabState extends State<MapTab> {
         backgroundColor: Colors.green,),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
