@@ -65,20 +65,23 @@ class WifiLocService {
   Future<ApproxLocation> findApproxLocation() async {
 
     var wifis = await wifiFinderService.getWifiList();
+    wifis.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
+
+    print('wifis $wifis');
 
     List<Network> possibleNetworks = List();
 
     List<Network> networks = await Future.wait(wifis.map((e) => _getMostPromisingNetwork(e.bssid)));
 
     possibleNetworks.addAll(networks);
-    print(possibleNetworks);
+    print('possible $possibleNetworks');
 
     if(possibleNetworks.length > 0) {
 
-      //sort -> a network with the strongest signal is first
-      possibleNetworks.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
+      WifiNetworkInfo wifiWithTheStrongestSignal = wifis.elementAt(0);
 
-      Network closestNetwork = possibleNetworks.elementAt(0);
+      Network closestNetwork = possibleNetworks.firstWhere((network) => network.mac == wifiWithTheStrongestSignal.bssid);
+      if(closestNetwork == null) return null;
 
       var approxLocation = ApproxLocation();
       approxLocation.lon = closestNetwork.lon;
