@@ -55,7 +55,7 @@ class WifiLocService {
 
     if(networks.length > 0) {
       //sort -> a network from api with the strongest signal is first
-//      networks.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
+      networks.sort((a, b) => b.signalStrength.compareTo(a.signalStrength));
       return networks.elementAt(0);
     }
 
@@ -87,6 +87,7 @@ class WifiLocService {
       approxLocation.lon = closestNetwork.lon;
       approxLocation.lat = closestNetwork.lat;
       approxLocation.radius = 10;
+      approxLocation.relatedNetwork = wifiWithTheStrongestSignal;
       return approxLocation;
     } else return null;
 

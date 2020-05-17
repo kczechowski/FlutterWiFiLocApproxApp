@@ -77,9 +77,12 @@ class _MapTabState extends State<MapTab> {
     _wifiLocService.findApproxLocation().then((location) {
       if(location != null) {
         mapController.move(location.toLatLng(), 18);
-        print('Found location: $location');
+        String locationFoundMessage = 'Found location: closest to ' +
+            location.relatedNetwork.ssid + '\n' + 'lat ' +
+            location.lat.toString() + '\nlon ' + location.lon.toString();
+        print(locationFoundMessage);
         Fluttertoast.showToast(
-          msg: 'Found location: $location',
+          msg: locationFoundMessage,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
