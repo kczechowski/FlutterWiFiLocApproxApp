@@ -25,19 +25,7 @@ class _MapTabState extends State<MapTab> {
 
     _wifiLocService = WifiLocService.fromDefaults();
 
-    var listener = WifiFoundListener();
-    listener.onFound((network) {
-      print('Found network: $network');
-      var marker = NetworkMarker(network.toLatLng());
-      markers.add(marker);
-      Fluttertoast.showToast(
-          msg: 'Found network: $network',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-      );
-    });
-    _wifiLocService.addOnFoundListener(listener);
+    _initWifiFoundListener();
 
     SharedPreferences.getInstance().then((prefs) async {
       if(!prefs.containsKey('POST_NETWORKS')) {
@@ -57,7 +45,35 @@ class _MapTabState extends State<MapTab> {
 
   }
 
+  void _initWifiFoundListener() {
+    var listener = WifiFoundListener();
+    listener.onFound((network) {
+      print('Found network: $network');
+      var marker = NetworkMarker(network.toLatLng());
+
+      var markersExists = markers.where((element) =>
+      element.runtimeType.toString() == 'NetworkMarker' &&
+          element.point.latitude == marker.point.latitude &&
+          element.point.longitude == marker.point.longitude);
+
+      if(markersExists.length == 0)
+        setState(() {
+          markers.add(marker);
+        });
+      Fluttertoast.showToast(
+        msg: 'Found network: $network',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+      );
+    });
+    _wifiLocService.addOnFoundListener(listener);
+  }
+
   void _findApproxLocation() {
+    setState(() {
+      markers.clear();
+    });
     _wifiLocService.findApproxLocation().then((location) {
       if(location != null) {
         mapController.move(location.toLatLng(), 18);
@@ -76,7 +92,10 @@ class _MapTabState extends State<MapTab> {
             new Container(
                 child: Icon(Icons.location_on, color: Colors.red,)
             ));
-        markers.add(marker);
+        setState(() {
+          markers.add(marker);
+        });
+
       } else {
         Fluttertoast.showToast(
           msg: 'Location not found',
