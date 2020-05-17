@@ -36,12 +36,6 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapT
     });
 
     Timer.periodic(Duration(seconds: 20), (timer) {
-      Fluttertoast.showToast(
-        msg: 'Sending networks to API',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-      );
       _saveFoundNetworksToAPI();
     });
 
@@ -130,6 +124,12 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapT
       bool postNetworks = prefs.getBool('POST_NETWORKS');
 
       if(postNetworks) {
+        Fluttertoast.showToast(
+          msg: 'Sending networks to API',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+        );
         _wifiLocService.saveFoundNetworksNearLocation();
       }
     });
