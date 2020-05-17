@@ -147,6 +147,7 @@ class _MapTabState extends State<MapTab> with AutomaticKeepAliveClientMixin<MapT
           options: new MapOptions(
             center: LatLng(50.259224, 19.022285),
             zoom: 13.0,
+            maxZoom: 18,
           ),
           layers: [
             new TileLayerOptions(
